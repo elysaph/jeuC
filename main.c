@@ -30,9 +30,12 @@ int main(int argc, char *argv[]) {
         return 1;
     }
     
-    // Création du renderer
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, 
-                                                SDL_RENDERER_ACCELERATED);
+    // Création du renderer (fallback logiciel si l'accélération n'est pas dispo)
+    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1,
+                                                SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if (!renderer) {
+        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+    }
     if (!renderer) {
         printf("Renderer creation failed: %s\n", SDL_GetError());
         SDL_DestroyWindow(window);
